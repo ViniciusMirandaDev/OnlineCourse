@@ -12,7 +12,7 @@ namespace OnlineCourse.DomainTest.Cursos
             {
                 Name = "Basic tech",
                 Workload = (double)88,
-                TargetPublic = "Students",
+                TargetPublic = TargetPublic.Student,
                 Value = (double)958
             };
             //Act
@@ -23,14 +23,22 @@ namespace OnlineCourse.DomainTest.Cursos
         }
     }
 
+    public enum TargetPublic
+    {
+        Student,
+        CollegeStudent,
+        Employee,
+        Employer
+    }
+
     public class Course
     {
         public string Name { get; private set; }
         public double Workload { get; private set; }
-        public string TargetPublic { get; private set; }
+        public TargetPublic TargetPublic { get; private set; }
         public double Value { get; private set; }
 
-        public Course(string name, double workload, string targetPublic, double value)
+        public Course(string name, double workload, TargetPublic targetPublic, double value)
         {
             Name = name;
             Workload = workload;
