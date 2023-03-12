@@ -56,6 +56,24 @@ namespace OnlineCourse.DomainTest.Cursos
             Assert.Throws<ArgumentException>(() =>
                 new Course(expected.Name, invalidWorkload, expected.TargetPublic, expected.Value));
         }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-2)]
+        [InlineData(-100)]
+        public void ShoulNotCourseHaveValueLassThanOne(double invalidValue)
+        {
+            var expected = new
+            {
+                Name = "Basic tech",
+                Workload = (double)88,
+                TargetPublic = TargetPublic.Student,
+                Value = (double)958
+            };
+
+            Assert.Throws<ArgumentException>(() =>
+                new Course(expected.Name, expected.Workload, expected.TargetPublic, invalidValue));
+        }
     }
 
     public enum TargetPublic
@@ -78,7 +96,7 @@ namespace OnlineCourse.DomainTest.Cursos
             if( string.IsNullOrEmpty(name))
                 throw new ArgumentException();
             
-            if(workload < 1)
+            if(workload < 1 || value < 1)
                 throw new ArgumentException();
 
             Name = name;
