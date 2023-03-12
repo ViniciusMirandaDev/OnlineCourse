@@ -1,4 +1,6 @@
-﻿namespace OnlineCourse.DomainTest.Cursos
+﻿using ExpectedObjects;
+
+namespace OnlineCourse.DomainTest.Cursos
 {
     public class CourseTest
     {
@@ -6,19 +8,18 @@
         public void ShouldCreateCourse()
         {
             //Arrange
-            const string name = "Basic tech";
-            const double workload = 88;
-            const string targetPublic = "Students";
-            const double value = 958;
-
+            var expected = new
+            {
+                Name = "Basic tech",
+                Workload = (double)88,
+                TargetPublic = "Students",
+                Value = (double)958
+            };
             //Act
-            var course = new Course(name, workload, targetPublic, value);
+            var course = new Course(expected.Name, expected.Workload, expected.TargetPublic, expected.Value);
 
             //Asserts
-            Assert.Equal(name, course.Name);
-            Assert.Equal(workload, course.Workload);
-            Assert.Equal(targetPublic, course.TargetPublic);
-            Assert.Equal(value, course.Value);
+            expected.ToExpectedObject().ShouldMatch(course);
         }
     }
 
