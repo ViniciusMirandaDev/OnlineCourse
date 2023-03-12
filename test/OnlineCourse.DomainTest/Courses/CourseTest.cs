@@ -21,6 +21,23 @@ namespace OnlineCourse.DomainTest.Cursos
             //Asserts
             expected.ToExpectedObject().ShouldMatch(course);
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void ShouldNotCourseNameBeInvalid(string invalidName)
+        {
+            var expected = new
+            {
+                Name = "Basic tech",
+                Workload = (double)88,
+                TargetPublic = TargetPublic.Student,
+                Value = (double)958
+            };
+
+            Assert.Throws<ArgumentException>(() => 
+                new Course(invalidName, expected.Workload, expected.TargetPublic, expected.Value));
+        }
     }
 
     public enum TargetPublic
@@ -40,6 +57,9 @@ namespace OnlineCourse.DomainTest.Cursos
 
         public Course(string name, double workload, TargetPublic targetPublic, double value)
         {
+            if( string.IsNullOrEmpty(name))
+                throw new ArgumentException();
+            
             Name = name;
             Workload = workload;
             TargetPublic = targetPublic;
