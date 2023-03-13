@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Moq;
 using OnlineCourse.Domain.Courses;
+using OnlineCourse.DomainTest._Util;
 
 namespace OnlineCourse.DomainTest.Courses
 {
@@ -18,7 +19,7 @@ namespace OnlineCourse.DomainTest.Courses
                 Name = fakeData.Random.Words(),
                 Description = fakeData.Lorem.Paragraph(),
                 Workload = fakeData.Random.Double(50, 1000),
-                TargetPublic = 1,
+                TargetPublic = "Student",
                 Value = fakeData.Random.Double(1000, 2000),
             };
 
@@ -38,6 +39,16 @@ namespace OnlineCourse.DomainTest.Courses
                  )
             ));
         }
+
+        [Fact]
+        public void ShouldNotInformInvalidTargetPublic()
+        {
+            var invalidTargetPublic = "Doctor";
+            _courseDto.TargetPublic = invalidTargetPublic;
+
+            Assert.Throws<ArgumentException>(() => _courseStorage.Storage(_courseDto))
+                .WithMessage("Invalid target public");
+        }
     }
 
     public interface ICourseRepository
@@ -55,11 +66,16 @@ namespace OnlineCourse.DomainTest.Courses
 
         public void Storage(CourseDto courseDto)
         {
+            Enum.TryParse(typeof(TargetPublic), courseDto.TargetPublic, out var targetPublic);
+
+            if(targetPublic == null)
+                throw new ArgumentException("Invalid target public");
+
             var course = new Course(
                 courseDto.Name,
                 courseDto.Description,
                 courseDto.Workload,
-                TargetPublic.Student,
+                (TargetPublic)targetPublic,
                 courseDto.Value);
 
             _courseRepository.Add(course);
@@ -71,7 +87,7 @@ namespace OnlineCourse.DomainTest.Courses
         public string Name { get; set; }
         public string Description { get; set; }
         public double Workload { get; set; }
-        public int TargetPublic { get; set; }
+        public string TargetPublic { get; set; }
         public double Value { get; set; }
     }
 }
