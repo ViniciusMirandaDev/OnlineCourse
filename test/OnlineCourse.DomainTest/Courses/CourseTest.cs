@@ -1,25 +1,46 @@
 ﻿using ExpectedObjects;
 using OnlineCourse.DomainTest._Util;
+using Xunit.Abstractions;
 
 namespace OnlineCourse.DomainTest.Cursos
 {
-    public class CourseTest
+    public class CourseTest : IDisposable
     {
+        private readonly ITestOutputHelper _output;
+        private readonly string _name;
+        private readonly double _workload;
+        private readonly TargetPublic _targetPublic;
+        private readonly double _value;
+
+        public CourseTest(ITestOutputHelper output)
+        {
+            _output = output;
+            _output.WriteLine("Running builder");
+
+            _name = "Basic tech";
+            _workload = 88;
+            _targetPublic = TargetPublic.Student;
+            _value = 958;
+        }
+
+        public void Dispose()
+        {
+            _output.WriteLine("Running Disposer");
+        }
+
         [Fact]
         public void ShouldCreateCourse()
         {
-            //Arrange
             var expected = new
             {
-                Name = "Basic tech",
-                Workload = (double)88,
-                TargetPublic = TargetPublic.Student,
-                Value = (double)958
+                Name = _name,
+                Workload = _workload,
+                TargetPublic = _targetPublic,
+                Value = _value
             };
-            //Act
+
             var course = new Course(expected.Name, expected.Workload, expected.TargetPublic, expected.Value);
 
-            //Asserts
             expected.ToExpectedObject().ShouldMatch(course);
         }
 
@@ -28,16 +49,8 @@ namespace OnlineCourse.DomainTest.Cursos
         [InlineData(null)]
         public void ShouldNotCourseNameBeInvalid(string invalidName)
         {
-            var expected = new
-            {
-                Name = "Basic tech",
-                Workload = (double)88,
-                TargetPublic = TargetPublic.Student,
-                Value = (double)958
-            };
-
             Assert.Throws<ArgumentException>(() =>
-                 new Course(invalidName, expected.Workload, expected.TargetPublic, expected.Value))
+                 new Course(invalidName, _workload, _targetPublic, _value))
                  .WithMessage("Invalid name");
         }
 
@@ -47,16 +60,8 @@ namespace OnlineCourse.DomainTest.Cursos
         [InlineData(-100)]
         public void ShoulNotCourseHaveWorkloadLassThanOne(double invalidWorkload)
         {
-            var expected = new
-            {
-                Name = "Basic tech",
-                Workload = (double)88,
-                TargetPublic = TargetPublic.Student,
-                Value = (double)958
-            };
-
             Assert.Throws<ArgumentException>(() =>
-                new Course(expected.Name, invalidWorkload, expected.TargetPublic, expected.Value))
+                new Course(_name, invalidWorkload, _targetPublic, _value))
                 .WithMessage("Invalid workload");
 
         }
@@ -67,16 +72,8 @@ namespace OnlineCourse.DomainTest.Cursos
         [InlineData(-100)]
         public void ShoulNotCourseHaveValueLassThanOne(double invalidValue)
         {
-            var expected = new
-            {
-                Name = "Basic tech",
-                Workload = (double)88,
-                TargetPublic = TargetPublic.Student,
-                Value = (double)958
-            };
-
             Assert.Throws<ArgumentException>(() =>
-                 new Course(expected.Name, expected.Workload, expected.TargetPublic, invalidValue))
+                 new Course(_name, _workload, _targetPublic, invalidValue))
                  .WithMessage("Invalid value");
         }
     }
