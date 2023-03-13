@@ -1,4 +1,5 @@
 ﻿using ExpectedObjects;
+using OnlineCourse.DomainTest._Util;
 
 namespace OnlineCourse.DomainTest.Cursos
 {
@@ -35,10 +36,9 @@ namespace OnlineCourse.DomainTest.Cursos
                 Value = (double)958
             };
 
-            var message = Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                  new Course(invalidName, expected.Workload, expected.TargetPublic, expected.Value))
-                 .Message;
-            Assert.Equal("Invalid name", message);
+                 .WithMessage("Invalid name");
         }
 
         [Theory]
@@ -55,10 +55,10 @@ namespace OnlineCourse.DomainTest.Cursos
                 Value = (double)958
             };
 
-            var message = Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 new Course(expected.Name, invalidWorkload, expected.TargetPublic, expected.Value))
-                .Message;
-            Assert.Equal("Invalid workload", message);
+                .WithMessage("Invalid workload");
+
         }
 
         [Theory]
@@ -75,10 +75,9 @@ namespace OnlineCourse.DomainTest.Cursos
                 Value = (double)958
             };
 
-            var message = Assert.Throws<ArgumentException>(() =>
-                new Course(expected.Name, expected.Workload, expected.TargetPublic, invalidValue))
-                .Message;
-            Assert.Equal("Invalid value", message);
+            Assert.Throws<ArgumentException>(() =>
+                 new Course(expected.Name, expected.Workload, expected.TargetPublic, invalidValue))
+                 .WithMessage("Invalid value");
         }
     }
 
