@@ -1,9 +1,4 @@
-﻿using OnlineCourse.DomainTest.Cursos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OnlineCourse.Domain.Courses;
 
 namespace OnlineCourse.DomainTest._Builders
 {
