@@ -35,8 +35,10 @@ namespace OnlineCourse.DomainTest.Cursos
                 Value = (double)958
             };
 
-            Assert.Throws<ArgumentException>(() => 
-                new Course(invalidName, expected.Workload, expected.TargetPublic, expected.Value));
+            var message = Assert.Throws<ArgumentException>(() =>
+                 new Course(invalidName, expected.Workload, expected.TargetPublic, expected.Value))
+                 .Message;
+            Assert.Equal("Invalid name", message);
         }
 
         [Theory]
@@ -53,8 +55,10 @@ namespace OnlineCourse.DomainTest.Cursos
                 Value = (double)958
             };
 
-            Assert.Throws<ArgumentException>(() =>
-                new Course(expected.Name, invalidWorkload, expected.TargetPublic, expected.Value));
+            var message = Assert.Throws<ArgumentException>(() =>
+                new Course(expected.Name, invalidWorkload, expected.TargetPublic, expected.Value))
+                .Message;
+            Assert.Equal("Invalid workload", message);
         }
 
         [Theory]
@@ -71,8 +75,10 @@ namespace OnlineCourse.DomainTest.Cursos
                 Value = (double)958
             };
 
-            Assert.Throws<ArgumentException>(() =>
-                new Course(expected.Name, expected.Workload, expected.TargetPublic, invalidValue));
+            var message = Assert.Throws<ArgumentException>(() =>
+                new Course(expected.Name, expected.Workload, expected.TargetPublic, invalidValue))
+                .Message;
+            Assert.Equal("Invalid value", message);
         }
     }
 
@@ -93,11 +99,14 @@ namespace OnlineCourse.DomainTest.Cursos
 
         public Course(string name, double workload, TargetPublic targetPublic, double value)
         {
-            if( string.IsNullOrEmpty(name))
-                throw new ArgumentException();
-            
-            if(workload < 1 || value < 1)
-                throw new ArgumentException();
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Invalid name");
+
+            if (workload < 1)
+                throw new ArgumentException("Invalid workload");
+
+            if (value < 1)
+                throw new ArgumentException("Invalid value");
 
             Name = name;
             Workload = workload;
