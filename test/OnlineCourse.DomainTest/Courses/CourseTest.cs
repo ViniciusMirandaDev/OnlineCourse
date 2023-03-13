@@ -1,4 +1,5 @@
 ﻿using ExpectedObjects;
+using OnlineCourse.DomainTest._Builders;
 using OnlineCourse.DomainTest._Util;
 using Xunit.Abstractions;
 
@@ -8,6 +9,7 @@ namespace OnlineCourse.DomainTest.Cursos
     {
         private readonly ITestOutputHelper _output;
         private readonly string _name;
+        private readonly string _description;
         private readonly double _workload;
         private readonly TargetPublic _targetPublic;
         private readonly double _value;
@@ -18,6 +20,7 @@ namespace OnlineCourse.DomainTest.Cursos
             _output.WriteLine("Running builder");
 
             _name = "Basic tech";
+            _description = "Basic description";
             _workload = 88;
             _targetPublic = TargetPublic.Student;
             _value = 958;
@@ -34,12 +37,13 @@ namespace OnlineCourse.DomainTest.Cursos
             var expected = new
             {
                 Name = _name,
+                Description = _description,
                 Workload = _workload,
                 TargetPublic = _targetPublic,
                 Value = _value
             };
 
-            var course = new Course(expected.Name, expected.Workload, expected.TargetPublic, expected.Value);
+            var course = new Course(expected.Name, expected.Description, expected.Workload, expected.TargetPublic, expected.Value);
 
             expected.ToExpectedObject().ShouldMatch(course);
         }
@@ -50,7 +54,7 @@ namespace OnlineCourse.DomainTest.Cursos
         public void ShouldNotCourseNameBeInvalid(string invalidName)
         {
             Assert.Throws<ArgumentException>(() =>
-                 new Course(invalidName, _workload, _targetPublic, _value))
+                 CourseBuilder.New().WithName(invalidName).Build())
                  .WithMessage("Invalid name");
         }
 
@@ -61,7 +65,7 @@ namespace OnlineCourse.DomainTest.Cursos
         public void ShoulNotCourseHaveWorkloadLassThanOne(double invalidWorkload)
         {
             Assert.Throws<ArgumentException>(() =>
-                new Course(_name, invalidWorkload, _targetPublic, _value))
+                CourseBuilder.New().WithWorkload(invalidWorkload).Build())
                 .WithMessage("Invalid workload");
 
         }
@@ -73,7 +77,7 @@ namespace OnlineCourse.DomainTest.Cursos
         public void ShoulNotCourseHaveValueLassThanOne(double invalidValue)
         {
             Assert.Throws<ArgumentException>(() =>
-                 new Course(_name, _workload, _targetPublic, invalidValue))
+                CourseBuilder.New().WithValue(invalidValue).Build())
                  .WithMessage("Invalid value");
         }
     }
@@ -89,11 +93,12 @@ namespace OnlineCourse.DomainTest.Cursos
     public class Course
     {
         public string Name { get; private set; }
+        public string? Description { get; private set; }
         public double Workload { get; private set; }
         public TargetPublic TargetPublic { get; private set; }
         public double Value { get; private set; }
 
-        public Course(string name, double workload, TargetPublic targetPublic, double value)
+        public Course(string name, string? description, double workload, TargetPublic targetPublic, double value)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Invalid name");
@@ -105,6 +110,7 @@ namespace OnlineCourse.DomainTest.Cursos
                 throw new ArgumentException("Invalid value");
 
             Name = name;
+            Description = description;
             Workload = workload;
             TargetPublic = targetPublic;
             Value = value;
