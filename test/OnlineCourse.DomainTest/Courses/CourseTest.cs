@@ -1,4 +1,5 @@
-﻿using ExpectedObjects;
+﻿using Bogus;
+using ExpectedObjects;
 using OnlineCourse.DomainTest._Builders;
 using OnlineCourse.DomainTest._Util;
 using Xunit.Abstractions;
@@ -19,11 +20,12 @@ namespace OnlineCourse.DomainTest.Cursos
             _output = output;
             _output.WriteLine("Running builder");
 
-            _name = "Basic tech";
-            _description = "Basic description";
-            _workload = 88;
+            var faker = new Faker();
+            _name = faker.Random.Word();
+            _description = faker.Lorem.Paragraph();
+            _workload = faker.Random.Double(50, 1000);
             _targetPublic = TargetPublic.Student;
-            _value = 958;
+            _value = faker.Random.Double(50, 1000);
         }
 
         public void Dispose()
@@ -67,7 +69,6 @@ namespace OnlineCourse.DomainTest.Cursos
             Assert.Throws<ArgumentException>(() =>
                 CourseBuilder.New().WithWorkload(invalidWorkload).Build())
                 .WithMessage("Invalid workload");
-
         }
 
         [Theory]
