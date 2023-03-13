@@ -64,7 +64,7 @@ namespace OnlineCourse.DomainTest.Cursos
         [InlineData(0)]
         [InlineData(-2)]
         [InlineData(-100)]
-        public void ShoulNotCourseHaveWorkloadLassThanOne(double invalidWorkload)
+        public void ShouldNotCourseHaveWorkloadLassThanOne(double invalidWorkload)
         {
             Assert.Throws<ArgumentException>(() =>
                 CourseBuilder.New().WithWorkload(invalidWorkload).Build())
@@ -75,7 +75,7 @@ namespace OnlineCourse.DomainTest.Cursos
         [InlineData(0)]
         [InlineData(-2)]
         [InlineData(-100)]
-        public void ShoulNotCourseHaveValueLassThanOne(double invalidValue)
+        public void ShouldNotCourseHaveValueLassThanOne(double invalidValue)
         {
             Assert.Throws<ArgumentException>(() =>
                 CourseBuilder.New().WithValue(invalidValue).Build())
